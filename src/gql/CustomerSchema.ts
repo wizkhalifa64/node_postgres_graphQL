@@ -1,5 +1,5 @@
 import { GraphQLObjectType, GraphQLString } from "graphql";
-import { GraphQLUUID } from "graphql-scalars";
+import { GraphQLEmailAddress, GraphQLUUID } from "graphql-scalars";
 import { aggregrationObj } from "../shared/utils";
 import { customer } from "../shared/data";
 export const CustomerSchema = new GraphQLObjectType({
@@ -8,13 +8,13 @@ export const CustomerSchema = new GraphQLObjectType({
     id: { type: GraphQLUUID },
     first_name: { type: GraphQLString },
     last_name: { type: GraphQLString },
-    email: { type: GraphQLString! },
+    email: { type: GraphQLEmailAddress! },
   }),
 });
 export const CreateCustomerInputType = {
   first_name: { type: GraphQLString! },
   last_name: { type: GraphQLString },
-  email: { type: GraphQLString! },
+  email: { type: GraphQLEmailAddress! },
   password: { type: GraphQLString! },
 };
 export type createCustomerInputType = {
@@ -23,4 +23,11 @@ export type createCustomerInputType = {
   email: string;
   password: string;
 };
+export const CustomerDetailsSchema = new GraphQLObjectType({
+  name: "customerdetails",
+  fields: () => ({
+    token: { type: GraphQLString },
+    user: { type: CustomerSchema },
+  }),
+});
 export const AggregrationCustomer = aggregrationObj(customer, "customerAgg");

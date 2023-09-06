@@ -32,17 +32,23 @@ export const aggregrationObj = (column: string[], name: string) => ({
   LIMIT: { type: GraphQLInt },
 });
 export const replaceCher = (str: string) => {
-  return str
-    .replaceAll('"},"', '" AND ')
-    .replaceAll('{"', " ")
-    .replaceAll("}", " ")
-    .replaceAll('":', "")
-    .replaceAll(',"', " ")
-    .replaceAll("LIMIT", "LIMIT ")
-    .replaceAll("_eq", " = ")
-    .replaceAll("_lte", " <= ")
-    .replaceAll("_gte", " >= ")
-    .replaceAll("_lt", " < ")
-    .replaceAll("_gt", " > ")
-    .replaceAll("_ne", " <> ");
+  return (
+    str
+      // .replaceAll('"},"', '" AND ')
+
+      // .replaceAll('{"', " ")
+      // .replaceAll("}", " ")
+      // .replaceAll('":', "")
+
+      // .replaceAll("LIMIT", "LIMIT ")
+      .replaceAll("_eq", " = ")
+      .replaceAll("_lte", " <= ")
+      .replaceAll("_gte", " >= ")
+      .replaceAll("_lt", " < ")
+      .replaceAll("_gt", " > ")
+      .replaceAll("_ne", " <> ")
+  );
+  // .replaceAll('," >=', " AND >=")
+  // .replaceAll(',"', " ")
+  // .replaceAll('"', "'");
 };
