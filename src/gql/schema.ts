@@ -1,65 +1,41 @@
+import { GraphQLList, GraphQLObjectType, GraphQLSchema } from "graphql";
 import {
-  GraphQLError,
-  GraphQLList,
-  GraphQLObjectType,
-  GraphQLSchema,
-} from "graphql";
-import {
-  AggregrationCustomer,
-  CreateCustomerInputType,
-  CustomerDetailsSchema,
-  CustomerSchema,
-} from "./CustomerSchema";
-import { replaceCher } from "../shared/utils";
-import { createCustomerResolver } from "../resolver/customerResolver";
-import {
-  AggregrationProduct,
-  CreateProduct,
-  CreateProductArgs,
-} from "./ProductSchema";
-import { createProductResolver } from "../resolver/productResolver";
+  Customer,
+  customerInputSchema,
+  customer_query,
+} from "./customerSchema";
+import { CustomerResolver } from "../resolver/customerResolver";
 import { client } from "../db/db";
 
 const RootQuery = new GraphQLObjectType({
   name: "RootQueryType",
   fields: {
     customer: {
-      type: CustomerSchema,
-      args: AggregrationCustomer,
-      resolve: (_, args) => {
-        const a = JSON.stringify(args);
-        const b = replaceCher(a);
-        console.log(b);
-      },
+      type: Customer,
     },
-    product: {
-      type: new GraphQLList(CreateProduct),
-      args: AggregrationProduct,
+    customer_query: {
+      type: new GraphQLList(Customer),
+      args: customer_query,
       resolve: async (_, args) => {
-        try {
-          const a = JSON.stringify(args);
-          const b = replaceCher(a);
-          const c = JSON.parse(b);
-          const d = Object.entries(c).flatMap((item: any) => {
-            if (typeof item[1] === "object") {
-              return `${item[0]} ${Object.entries(item[1]).flatMap(
-                (elm) =>
-                  `${elm[0]} ${JSON.stringify(elm[1]).replaceAll(
-                    ',"',
-                    ` AND ${elm[0]} `
-                  )}`
-              )}`;
+        const data = JSON.parse(JSON.stringify(args));
+        const b = Object.entries(data);
+        const qu = b
+          .flatMap((e) => {
+            if (typeof e[1] === "object") {
+              const data = JSON.stringify(e[1])
+                .replaceAll("{", "")
+                .replaceAll("}", "")
+                .replaceAll(":", " ")
+                .replaceAll('"', "");
+              return `${e[0].replace("_", " ")} ${data}`;
             } else {
-              return `${item[0]} ${item[1]}`;
+              return `${e[0]} ${e[1]}`;
             }
-          });
-
-          // const data = await client.query(`SELECT * from product   LIMIT 10 `);
-          console.log(d);
-          // return data.rows;
-        } catch (error) {
-          // return new GraphQLError("Something wrong");
-        }
+          })
+          .join(" ");
+        const neq = `select * from customers` + " " + qu;
+        const result = await client.query(neq);
+        return result.rows;
       },
     },
   },
@@ -68,17 +44,13 @@ const RootMutation = new GraphQLObjectType({
   name: "RootMutationType",
   fields: {
     create_customer: {
-      type: CustomerDetailsSchema,
-      args: CreateCustomerInputType,
-      resolve: createCustomerResolver,
-    },
-    createProduct: {
-      type: CreateProduct,
-      args: CreateProductArgs,
-      resolve: createProductResolver,
+      type: Customer,
+      args: customerInputSchema,
+      resolve: CustomerResolver,
     },
   },
 });
+
 const schema = new GraphQLSchema({
   query: RootQuery,
   mutation: RootMutation,

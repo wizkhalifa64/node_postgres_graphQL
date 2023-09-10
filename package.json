@@ -17,7 +17,8 @@
     "graphql-scalars": "^1.22.2",
     "graphql-yoga": "^4.0.4",
     "jsonwebtoken": "^9.0.2",
-    "pg": "^8.11.3"
+    "pg": "^8.11.3",
+    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.31.0"
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",

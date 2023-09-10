@@ -1,5 +1,5 @@
 import { Client } from "pg";
-import { customerquery, productTeable } from "./query";
+// import { customerquery, productTeable } from "./query";
 export const client = new Client({
   user: "postgres",
   host: "localhost",
@@ -11,9 +11,9 @@ export const connectDb = async () => {
   try {
     await client.connect();
     console.log("database connected");
-    await client.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";');
-    await client.query(customerquery);
-    await client.query(productTeable);
+    // await client.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";');
+    // await client.query(customerquery);
+    // await client.query(productTeable);
   } catch (error) {
     throw error;
   }
