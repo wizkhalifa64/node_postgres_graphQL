@@ -4,12 +4,13 @@ import { createYoga } from "graphql-yoga";
 import { createServer } from "node:http";
 import { connectDb } from "./db/db";
 import schema from "./gql/schema";
+import { authMiddleWare } from "./middleware/authMiddleware";
 // type ServerContext = {
 //   req: HttpRequest;
 //   res: HttpResponse;
 // };
 
-const yoga = createYoga({ schema: schema });
+const yoga = createYoga({ schema: schema, context: authMiddleWare });
 const server = createServer(yoga);
 connectDb()
   .then(

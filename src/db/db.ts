@@ -1,19 +1,21 @@
 import { Client } from "pg";
-// import { customerquery, productTeable } from "./query";
 export const client = new Client({
   user: "postgres",
   host: "localhost",
-  database: "hrmanage",
+  database: "hr-graphql-js",
   password: "admin",
   port: 5432,
 });
 export const connectDb = async () => {
   try {
     await client.connect();
+    // await client.query(
+    //   `INSERT INTO users( name,email,password,gender,role)
+    // VALUES($1,$2,$3,$4,$5)
+    // `,
+    //   ["admin", "admin@gmail.com", "password", 0, 1]
+    // );
     console.log("database connected");
-    // await client.query('CREATE EXTENSION IF NOT EXISTS "uuid-ossp";');
-    // await client.query(customerquery);
-    // await client.query(productTeable);
   } catch (error) {
     throw error;
   }
