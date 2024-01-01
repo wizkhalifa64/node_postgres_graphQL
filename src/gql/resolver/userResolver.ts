@@ -43,15 +43,30 @@ export const GetAllUser = async (_: undefined, args: UserFilter) => {
 FROM
     users
 WHERE
-   
-     gender = (
+    name ILIKE (
         CASE
-            WHEN $1 IS NOT NULL THEN $1
+            WHEN $1::text IS NOT NULL THEN '%' || $1 || '%'
+            ELSE '%%'
+        END
+    )
+    AND email ILIKE (
+        CASE
+            WHEN $2::text IS NOT NULL THEN '%' || $2 || '%'
+            ELSE '%%'
+        END
+    )
+    AND gender = (
+        CASE
+            WHEN $3::SMALLINT IS NOT NULL THEN $3
             ELSE gender
         END
     )
   `;
-    const userList = await client.query(query, [args.gender]);
+    const userList = await client.query(query, [
+      args.name,
+      args.email,
+      args.gender,
+    ]);
     return userList.rows;
   } catch (error) {
     error;
