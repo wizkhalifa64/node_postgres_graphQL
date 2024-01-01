@@ -45,13 +45,13 @@ FROM
 WHERE
     name ILIKE (
         CASE
-            WHEN $1::text IS NOT NULL THEN '%' || $1 || '%'
+            WHEN $1::VARCHAR IS NOT NULL THEN '%' || $1 || '%'
             ELSE '%%'
         END
     )
     AND email ILIKE (
         CASE
-            WHEN $2::text IS NOT NULL THEN '%' || $2 || '%'
+            WHEN $2::VARCHAR IS NOT NULL THEN '%' || $2 || '%'
             ELSE '%%'
         END
     )
