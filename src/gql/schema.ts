@@ -1,18 +1,21 @@
-import { GraphQLObjectType, GraphQLSchema } from "graphql";
+import { GraphQLList, GraphQLObjectType, GraphQLSchema } from "graphql";
 import {
   UserResponse,
   Users,
   authInputSchema,
+  userQuerySchema,
   userRegisterInputSchema,
 } from "./schema/userSchema";
-import { UserResolver } from "./resolver/userResolver";
+import { GetAllUser, UserResolver } from "./resolver/userResolver";
 import { AuthResolver } from "./resolver/authResolver";
 
 const RootQuery = new GraphQLObjectType({
   name: "RootQueryType",
   fields: {
-    customer: {
-      type: Users,
+    users: {
+      type: new GraphQLList(Users),
+      args: userQuerySchema,
+      resolve: GetAllUser,
     },
   },
 });

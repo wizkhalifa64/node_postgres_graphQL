@@ -1,8 +1,8 @@
 import { client } from "../../db/db";
-import { userCreate } from "../schema/userSchema";
 import { GraphQLError } from "graphql";
 import bcrypt from "bcrypt";
-export const UserResolver = async (_: any, args: userCreate) => {
+import { UserCreate, UserFilter } from "../../types/userArgs";
+export const UserResolver = async (_: any, args: UserCreate) => {
   try {
     const is_valid_role = await client.query(
       `SELECT role_id FROM roles WHERE role_id = $1`,
@@ -30,6 +30,29 @@ export const UserResolver = async (_: any, args: userCreate) => {
     ];
     const data = await client.query(query, values);
     return data.rows[0];
+  } catch (error) {
+    error;
+  }
+};
+
+export const GetAllUser = async (_: undefined, args: UserFilter) => {
+  try {
+    const query = `
+    SELECT
+    *
+FROM
+    users
+WHERE
+   
+     gender = (
+        CASE
+            WHEN $1 IS NOT NULL THEN $1
+            ELSE gender
+        END
+    )
+  `;
+    const userList = await client.query(query, [args.gender]);
+    return userList.rows;
   } catch (error) {
     error;
   }

@@ -1,16 +1,15 @@
 import { GraphQLError } from "graphql/error/GraphQLError";
 import { client } from "../../db/db";
-import { userRegister } from "../schema/userSchema";
 import { compare } from "bcrypt";
 import { sign } from "jsonwebtoken";
+import { UserRegister } from "../../types/userArgs";
 
-export const AuthResolver = async (_: undefined, args: userRegister) => {
+export const AuthResolver = async (_: undefined, args: UserRegister) => {
   try {
     const is_present = await client.query(
-      `SELECT email FROM users WHERE email = $1`,
+      `SELECT * FROM users WHERE email = $1`,
       [args.email]
     );
-
     if (is_present?.rowCount === 0) {
       return new GraphQLError("User not registered");
     }
@@ -26,7 +25,7 @@ export const AuthResolver = async (_: undefined, args: userRegister) => {
       role: is_present.rows[0]?.role,
     };
     const token = sign(payload, process.env.JWT_SECRET as string);
-    return { token, user: is_present };
+    return { token, user: is_present.rows[0] };
   } catch (error) {
     error;
   }

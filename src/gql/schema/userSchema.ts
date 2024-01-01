@@ -38,16 +38,12 @@ export const authInputSchema = {
   email: { type: new GraphQLNonNull(GraphQLEmailAddress) },
   password: { type: new GraphQLNonNull(GraphQLString) },
 };
-export type userCreate = {
-  name: string;
-  email: string;
-  password: string;
-  gender: number;
-  role: number;
-};
-export type userRegister = {
-  email: string;
-  password: string;
+export const userQuerySchema = {
+  name: { type: GraphQLString },
+  email: { type: GraphQLString },
+  gender: { type: GenderType },
+  role: { type: GraphQLInt },
+  verified: { type: GraphQLBoolean },
 };
 export const Users = new GraphQLObjectType({
   name: "user",
