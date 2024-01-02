@@ -1,11 +1,18 @@
-import { GraphQLID, GraphQLObjectType, GraphQLString } from "graphql";
+import {
+  GraphQLID,
+  GraphQLNonNull,
+  GraphQLObjectType,
+  GraphQLString,
+} from "graphql";
 
 export const ChatSchema = {
-  id: { type: GraphQLID },
   from: { type: GraphQLString },
   message: { type: GraphQLString },
 };
-
+export const ChatInputSchema = {
+  from: { type: new GraphQLNonNull(GraphQLString) },
+  message: { type: new GraphQLNonNull(GraphQLString) },
+};
 export const Chat = new GraphQLObjectType({
   name: "chat",
   fields: () => ChatSchema,
