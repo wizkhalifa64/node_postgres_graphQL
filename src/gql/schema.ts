@@ -8,6 +8,7 @@ import {
 } from "./schema/userSchema";
 import { GetAllUser, UserResolver } from "./resolver/userResolver";
 import { AuthResolver } from "./resolver/authResolver";
+import { Chat, ChatSchema } from "./schema/chatSchema";
 
 const RootQuery = new GraphQLObjectType({
   name: "RootQueryType",
@@ -34,9 +35,15 @@ const RootMutation = new GraphQLObjectType({
     },
   },
 });
-
+const RootSubScription = new GraphQLObjectType({
+  name: "RootSubscription",
+  fields: {
+    messageSent: { type: Chat },
+  },
+});
 const schema = new GraphQLSchema({
   query: RootQuery,
   mutation: RootMutation,
+  subscription: RootSubScription,
 });
 export default schema;
